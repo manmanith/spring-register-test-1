@@ -1,5 +1,6 @@
 package com.kshrd.registration.controller;
 
+import com.kshrd.registration.utillity.GenerateCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

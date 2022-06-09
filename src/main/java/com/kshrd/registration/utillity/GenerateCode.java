@@ -24,54 +24,55 @@ public class  GenerateCode {
         return generateRandomString(length);
     }
 
-//    public String EncryptPassword(String password)
-//    {
-//        AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
-//        aesEncryptor.setPassword("#KSHRD2022");
-//        String myEncryptedPassword = aesEncryptor.encrypt(password);
-//        System.out.println("EncryptPassword: " + myEncryptedPassword );
-//        String correctToken1 = myEncryptedPassword.substring(0, 2);
-//        String correctToken2 = myEncryptedPassword.substring(6, myEncryptedPassword.length() - 1);
-//        String finalToken = correctToken1.concat(generateUserId(4)).concat(correctToken2);
-//        return finalToken;
-//    }
-public String EncryptPassword(String password)
-{
-    AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
-    aesEncryptor.setPassword("#KSHRD2022");
-    String myEncryptedPassword = aesEncryptor.encrypt(password);
-    System.out.println("EncryptPassword: " + myEncryptedPassword );
-//    String correctToken1 = myEncryptedPassword.substring(0, 2);
-//    String correctToken2 = myEncryptedPassword.substring(6, myEncryptedPassword.length() - 1);
-//    String finalToken = correctToken1.concat(generateUserId(4)).concat(correctToken2);
-    return myEncryptedPassword;
-}
+    public String EncryptPassword(String password)
+    {
+        AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
+        aesEncryptor.setPassword("#KSHRD2022");
+        String myEncryptedPassword = aesEncryptor.encrypt(password);
+        System.out.println("EncryptPassword: " + myEncryptedPassword );
 
-//    public String DecryptPassword(String passwordFromConfigFile)
-//    {
-//        String correctToken1 = passwordFromConfigFile.substring(0, 2);
-//        String correctToken2 = passwordFromConfigFile.substring(6, passwordFromConfigFile.length() - 1);
-//        String finalToken = correctToken1.concat(correctToken2);
-//
-//        AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
-//        aesEncryptor.setPassword("#KSHRD2022");
-//        String decryptedPassword = aesEncryptor.decrypt(finalToken);
-//        System.out.println("DecryptPassword: " + decryptedPassword );
-//        return decryptedPassword;
-//    }
+        String correctToken1 = myEncryptedPassword.substring(0, 2);
+//        System.out.println("correctToken1: " + correctToken1 );
+        String correctToken2 = myEncryptedPassword.substring(2);
+//        System.out.println("correctToken2: " + correctToken2 );
+        String finalToken = correctToken1.concat(generateUserId(4)).concat(correctToken2);
+//        System.out.println("finalToken: " + finalToken );
+        return finalToken;
+    }
+
+//        public String EncryptPassword(String password)
+//        {
+//            AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
+//            aesEncryptor.setPassword("#KSHRD2022");
+//            String myEncryptedPassword = aesEncryptor.encrypt(password);
+//            System.out.println("EncryptPassword: " + myEncryptedPassword );
+//        return myEncryptedPassword;
+//        }
 
     public String DecryptPassword(String passwordFromConfigFile)
     {
-//        String correctToken1 = passwordFromConfigFile.substring(0, 2);
-//        String correctToken2 = passwordFromConfigFile.substring(6, passwordFromConfigFile.length() - 1);
-//        String finalToken = correctToken1.concat(correctToken2);
+        String correctToken1 = passwordFromConfigFile.substring(0, 2);
+//        System.out.println("correctToken1: " + correctToken1 );
+        String correctToken2 = passwordFromConfigFile.substring(6);
+//        System.out.println("correctToken2: " + correctToken2 );
+        String finalToken = correctToken1.concat(correctToken2);
+//        System.out.println("finalToken: " + finalToken );
 
         AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
         aesEncryptor.setPassword("#KSHRD2022");
-        String decryptedPassword = aesEncryptor.decrypt(passwordFromConfigFile);
+        String decryptedPassword = aesEncryptor.decrypt(finalToken);
         System.out.println("DecryptPassword: " + decryptedPassword );
         return decryptedPassword;
     }
+
+//    public String DecryptPassword(String passwordFromConfigFile)
+//    {
+//        AES256TextEncryptor aesEncryptor = new AES256TextEncryptor();
+//        aesEncryptor.setPassword("#KSHRD2022");
+//        String decryptedPassword = aesEncryptor.decrypt(passwordFromConfigFile);
+//        System.out.println("DecryptPassword: " + decryptedPassword );
+//        return decryptedPassword;
+//    }
 
     public static String encodeBase64(String message) {
         String code = Base64.getEncoder().encodeToString(message.getBytes());

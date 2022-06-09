@@ -43,11 +43,11 @@ public class SwaggerConfig {
     // Adding information to you swagger
     private ApiInfo apiInfo(){
         return new ApiInfo(
-                "Mybatis Demo",
-                "JWT, JavaMailServer, Exception Handler, Upload Images, Pagination...",
+                "KSHRD REGISTRATION",
+                "Online registration platform for entrance exam at KSHRD Center",
                 "1.0",
                 "https://kshrd.com.kh/about-us",
-                new Contact("KAO LEANGSENG", "https://gitlab.com/leangsengk90/spring_mybatis.git","leangsengk90@gmail.com")//your name, url , email
+                new Contact("KSHRD REGISTRATION", "https://register.kshrd.com.kh","leangsengk90@gmail.com")//your name, url , email
                 ,"KSHRD License",
                 "https://kshrd.com.kh",
                 Collections.emptyList()

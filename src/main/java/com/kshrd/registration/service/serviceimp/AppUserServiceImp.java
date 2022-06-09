@@ -13,6 +13,7 @@ import com.kshrd.registration.service.AppUserService;
 import com.kshrd.registration.service.EmailService;
 import com.kshrd.registration.utillity.GenerateCode;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -116,7 +117,6 @@ public class AppUserServiceImp implements AppUserService {
 
         try{
             String getToken = code.DecryptPassword(token);
-            System.out.println("DECRYPT: " + getToken);
             AppUser appUser = appUserRepository.getUserByToken(getToken);
             if(appUser != null){
                 AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
@@ -131,9 +131,14 @@ public class AppUserServiceImp implements AppUserService {
         }
     }
 
+    @Value("${base.token.url}")
+    private String baseToken;
+
+    /** URLEncoder.encode(encryptToken, StandardCharsets.UTF_8.name()) */
     private void sendEmailVerification(String toEmail, String code, String encryptToken) throws UnsupportedEncodingException {
         emailService.sendByMail(toEmail, "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
+                "\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
@@ -143,48 +148,77 @@ public class AppUserServiceImp implements AppUserService {
                 "        * {\n" +
                 "            font-family: Helvetica, sans-serif;\n" +
                 "        }\n" +
-                "        h2{\n" +
+                "\n" +
+                "        h2 {\n" +
                 "            letter-spacing: 2px;\n" +
                 "        }\n" +
-                "        ul li{\n" +
-                "            color:grey;\n" +
+                "\n" +
+                "        ul li {\n" +
+                "            color: grey;\n" +
                 "        }\n" +
-                "        ul li span{\n" +
+                "\n" +
+                "        ul li span {\n" +
                 "            color: brown;\n" +
                 "        }\n" +
-                "        #code{\n" +
+                "\n" +
+                "        .code {\n" +
                 "            background-color: rgb(255, 170, 0);\n" +
+                "            color: rgb(0, 0, 0);\n" +
                 "            width: 244px;\n" +
                 "            height: 60px;\n" +
                 "        }\n" +
-                "        div p{\n" +
-                "            color: rgb(0, 0, 0);\n" +
+                "\n" +
+                "        .link {\n" +
+                "            width: 300px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .or {\n" +
+                "            width: 244px;\n" +
+                "            height: 60px;\n" +
+                "            color: grey;\n" +
+                "        }\n" +
+                "\n" +
+                "        div p {\n" +
                 "            font-size: 20px;\n" +
                 "            font-weight: bold;\n" +
                 "            font-family: monospace;\n" +
                 "            text-align: center;\n" +
                 "            padding-top: 14px;\n" +
                 "        }\n" +
+                "\n" +
+                "        #url {\n" +
+                "            font-size: 16px;\n" +
+                "            font-weight: bold;\n" +
+                "            font-family: monospace;\n" +
+                "            text-align: center;\n" +
+                "        }\n" +
                 "    </style>\n" +
                 "</head>\n" +
+                "\n" +
                 "<body>\n" +
                 "    <h2>VERIFICATION CODE</h2>\n" +
-                "    <div id=\"code\">\n" +
+                "    <div class=\"code\">\n" +
                 "        <p>"+code+"</p>\n" +
                 "    </div>\n" +
-                "        <a href=\"http://localhost:8080/auth?token="+ URLEncoder.encode(encryptToken, StandardCharsets.UTF_8.name()) +"\">Click here to verify</a>\n" +
+                "    <div class=\"or\">\n" +
+                "        <p>–– OR ––</p>\n" +
+                "    </div>\n" +
+                "    <div class=\"link\">\n" +
+                "        <a id=\"url\" href=\""+baseToken+URLEncoder.encode(encryptToken, StandardCharsets.UTF_8.name())+"\">CLICK HERE TO VERIFY DIRECTLY</a>\n" +
+                "    </div>\n" +
                 "    <ul style=\"list-style-type: none; padding: 0;\">\n" +
-                "        <li><span>*</span> Please use this code to login into the system</li>\n" +
-                "        <li>and you can register to be an applicant for extrance exam.</li>\n" +
-                "        <li>------------------------------------------------------------------------------------------------</li> \n" +
-                "        <li>Korea Software HRD Center / Foundation for Korea Software Global Aid</li>  \n" +
-                "        <li>No. 12, St. 323, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia</li>  \n" +
-                "        <li>Tel: (+855)17-503-532), (+855) 93-379-803</li>\n" +
+                "        <li><span>*</span> Please use this verification code to login into the system</li>\n" +
+                "        <li>and you can register to be an applicant for entrance exam.</li>\n" +
+                "        <li>------------------------------------------------------------------------------------------------</li>\n" +
+                "        <li>Korea Software HRD Center / Foundation for Korea Software Global Aid</li>\n" +
+                "        <li>No. 12, St. 323, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia</li>\n" +
+                "        <li>Tel: (+855)17-503-532, (+855) 93-379-803</li>\n" +
                 "        <li>Facebook: www.facebook.com/polen.sok.3</li>\n" +
                 "        <li>Email: polen.hrd@gmail.com</li>\n" +
                 "        <li>Website: www.kshrd.com.kh</li>\n" +
                 "    </ul>\n" +
                 "</body>\n" +
+                "\n" +
                 "</html>");
     }
 
