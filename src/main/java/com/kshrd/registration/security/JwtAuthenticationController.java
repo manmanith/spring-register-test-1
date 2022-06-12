@@ -32,11 +32,14 @@ public class JwtAuthenticationController {
     }
 
     @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtReq authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtReq jwtReq) throws Exception {
 
-        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        if(jwtReq.getEmail().isEmpty() || jwtReq.getPassword().isEmpty())
+            throw new NullPointerException("Email or Password is empty!");
+
+        authenticate(jwtReq.getEmail(), jwtReq.getPassword());
         final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getEmail());
+                .loadUserByUsername(jwtReq.getEmail());
 
         System.out.println("userDetails: " + userDetails);
         final String token = jwtTokenUtil.generateToken(userDetails);

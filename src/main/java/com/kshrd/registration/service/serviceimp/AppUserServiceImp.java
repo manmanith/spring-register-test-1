@@ -54,7 +54,6 @@ public class AppUserServiceImp implements AppUserService {
 //            throw new UsernameNotFoundException("User is disabled!");
 //        }
 
-        appUser.setStatus(true);
         return new org.springframework.security.core.userdetails.User(appUser.getUsername(), appUser.getPassword(),
                     appUser.getAuthorities());
     }
@@ -99,7 +98,7 @@ public class AppUserServiceImp implements AppUserService {
                 appUserRes = modelMapper.map(user, AppUserRes.class) ;
                 System.out.println("NEW USER: " + appUserRes);
                 if(appUserRes != null){
-                    sendEmailVerification("leangsengk90@gmail.com",getCode, code.EncryptPassword(appUserRes.getToken()));
+                    sendEmailVerification("leangsengk90@gmail.com",getCode, code.EncryptPassword(appUserRes.getJwtToken()));
                 }
                 return appUserRes;
             }
@@ -121,7 +120,7 @@ public class AppUserServiceImp implements AppUserService {
             if(appUser != null){
                 AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
                 final String jwtToken = jwtTokenUtil.generateToken(appUser);
-                appUserRes.setToken(jwtToken);
+                appUserRes.setJwtToken(jwtToken);
                 return appUserRes;
             }else {
                 throw new UsernameNotFoundException("User is not found via token!");

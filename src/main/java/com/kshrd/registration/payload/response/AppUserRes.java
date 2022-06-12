@@ -31,7 +31,7 @@ public class AppUserRes {
     private Boolean status;
     private String photoUrl;
     private Generation generation;
-    private String token;
+    private String jwtToken;
     private Boolean isDonated;
     private List<Role> roles;
 
