@@ -27,18 +27,22 @@ public class UploadFileServiceImp implements UploadFileService {
 
     @Override
     public String saveFile(MultipartFile file) throws IOException {
+        try{
+            String filename = file.getOriginalFilename();
+            System.out.println("filename: " + filename);
+            String[] fileParts = filename.split("\\.");
+            String extension = fileParts[fileParts.length - 1];
+            System.out.println("extension: " + extension);
 
-        String filename = file.getOriginalFilename();
-        System.out.println("filename: " + filename);
-        String[] fileParts = filename.split("\\.");
-        String extension = fileParts[fileParts.length - 1];
-        System.out.println("extension: " + extension);
+            filename = UUID.randomUUID() + "." +  extension;
+            Path resolvePath = path.resolve(filename);
+            Files.copy(file.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
 
-        filename = UUID.randomUUID() + "." +  extension;
-        Path resolvePath = path.resolve(filename);
-        Files.copy(file.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+            return imageUrl + filename;
+        }catch (IOException ex){
+            throw new IOException(ex.getMessage());
+        }
 
-        return imageUrl + filename;
     }
 
 //    @Override
@@ -61,20 +65,24 @@ public class UploadFileServiceImp implements UploadFileService {
 
     @Override
     public List<String> saveMultiFiles(MultipartFile[] fileList) throws IOException {
-        List urlList = new ArrayList();
+        try{
+            List urlList = new ArrayList();
+            for(MultipartFile multipartFile: fileList){
+                String filename = multipartFile.getOriginalFilename();
+                System.out.println("filename: " + filename);
+                String[] fileParts = filename.split("\\.");
+                String extension = fileParts[fileParts.length - 1];
+                System.out.println("extension: " + extension);
 
-        for(MultipartFile multipartFile: fileList){
-            String filename = multipartFile.getOriginalFilename();
-            System.out.println("filename: " + filename);
-            String[] fileParts = filename.split("\\.");
-            String extension = fileParts[fileParts.length - 1];
-            System.out.println("extension: " + extension);
-
-            filename = UUID.randomUUID() + "." +  extension;
-            urlList.add(imageUrl + filename);
-            Path resolvePath = path.resolve(filename);
-            Files.copy(multipartFile.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+                filename = UUID.randomUUID() + "." +  extension;
+                urlList.add(imageUrl + filename);
+                Path resolvePath = path.resolve(filename);
+                Files.copy(multipartFile.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+            return urlList;
+        }catch (Exception ex){
+            throw new IOException(ex.getMessage());
         }
-        return urlList;
+
     }
 }

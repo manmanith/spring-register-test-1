@@ -7,7 +7,7 @@ import com.kshrd.registration.payload.response.AppUserRes;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AppUserService extends UserDetailsService {
-    AppUserRes addNewUser(EmailReq email) throws AppExceptionHandler;
+    AppUserRes addNewUser(EmailReq email) throws Exception;
     AppUserRes verifyByToken(String token) throws Exception;
 //    AppUser signIn(AppUserSigninReq signInReq);
 }

@@ -7,7 +7,10 @@ import com.kshrd.registration.payload.request.EmailReq;
 import com.kshrd.registration.payload.request.JwtReq;
 import com.kshrd.registration.payload.response.AppUserRes;
 import com.kshrd.registration.payload.response.JwtRes;
+import com.kshrd.registration.payload.response.ResponseRes;
 import com.kshrd.registration.service.AppUserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +18,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 
 @RestController
@@ -43,11 +48,20 @@ public class JwtAuthenticationController {
 
         System.out.println("userDetails: " + userDetails);
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtRes(token));
+        AppUserRes appUserRes = new AppUserRes();
+        ModelMapper mapper = new ModelMapper();
+        appUserRes = mapper.map(userDetails, AppUserRes.class);
+        appUserRes.setJwtToken(token);
+
+        ResponseRes responseRes = new ResponseRes(
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign in successfully!",
+                "/auth/signin",true, appUserRes,null
+        );
+        return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
     }
 
     @PostMapping("/auth/signup")
-    public AppUserRes addNewUser(@RequestBody EmailReq email) throws AppExceptionHandler {
+    public AppUserRes addNewUser(@RequestBody EmailReq email) throws Exception {
         AppUserRes appUser = userDetailsService.addNewUser(email);
         return appUser;
     }

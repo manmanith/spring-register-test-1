@@ -1,7 +1,6 @@
 package com.kshrd.registration.service.serviceimp;
 
 import com.kshrd.registration.configuration.EmailValidator;
-import com.kshrd.registration.constant.StatusCodeEnum;
 import com.kshrd.registration.exception.AppExceptionHandler;
 import com.kshrd.registration.model.AppUser;
 import com.kshrd.registration.payload.request.EmailPasswordReq;
@@ -14,6 +13,7 @@ import com.kshrd.registration.service.EmailService;
 import com.kshrd.registration.utillity.GenerateCode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,7 +45,6 @@ public class AppUserServiceImp implements AppUserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         AppUser appUser = appUserRepository.getUserByEmail(email);
         System.out.println("loadUserByUsername: "+appUser);
-
         /** CHECK USER IS ENABLED OR NOT */
 //        if(appUser != null && appUser.getStatus()){
 //            return new org.springframework.security.core.userdetails.User(appUser.getUsername(), appUser.getPassword(),
@@ -59,7 +58,7 @@ public class AppUserServiceImp implements AppUserService {
     }
 
     @Override
-    public AppUserRes addNewUser(EmailReq email) throws AppExceptionHandler {
+    public AppUserRes addNewUser(EmailReq email) throws Exception {
         //Validate email before sending
         boolean isEmailValid = emailValidator.test(email.getEmail());
         if (!isEmailValid) throw new IllegalStateException("Email is invalid!");
@@ -112,8 +111,7 @@ public class AppUserServiceImp implements AppUserService {
                 return appUserRes;
             }
         }catch (Exception ex){
-            throw new AppExceptionHandler(StatusCodeEnum.BAD_REQUEST.getNum(),
-                    ex.getMessage(), "/auth/signup");
+            throw new Exception(ex.getMessage());
         }
     }
 
@@ -143,7 +141,7 @@ public class AppUserServiceImp implements AppUserService {
     private String baseToken;
 
     /** URLEncoder.encode(encryptToken, StandardCharsets.UTF_8.name()) */
-    private void sendEmailVerification(String toEmail, String code, String encryptToken) throws UnsupportedEncodingException {
+    private void sendEmailVerification(String toEmail, String code, String encryptToken) throws Exception {
         emailService.sendByMail(toEmail, "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "\n" +
