@@ -62,4 +62,8 @@ public interface AppUserRepo {
     @Select("SELECT * FROM app_user WHERE token = #{token}")
     @ResultMap("userResults")
     AppUser getUserByToken(String token);
+
+    @Select("INSERT INTO user_role(user_id, role_id)\n" +
+            "VALUES(#{userId}, (SELECT id FROM \"role\" WHERE \"name\" ILIKE 'USER'))")
+    void addUserInRoleUSER(Integer userId);
 }

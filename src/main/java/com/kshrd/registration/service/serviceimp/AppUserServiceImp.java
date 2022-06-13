@@ -33,7 +33,7 @@ public class AppUserServiceImp implements AppUserService {
     private final EmailService emailService;
     private final JwtTokenUtil jwtTokenUtil;
 
-    public AppUserServiceImp(AppUserRepo appUserRepository, PasswordEncoder passwordEncoder, EmailValidator emailValidator, EmailService emailService, JwtTokenUtil jwtTokenUtil) {
+    public AppUserServiceImp(AppUserRepo appUserRepository, PasswordEncoder passwordEncoder, EmailValidator emailValidator, EmailService emailService, JwtTokenUtil jwtTokenUtil, GenerateCode code) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailValidator = emailValidator;
@@ -83,7 +83,10 @@ public class AppUserServiceImp implements AppUserService {
             if (findUserByEmail != null){
                 EmailPasswordReq userReq2 = new EmailPasswordReq(email.getEmail(), encode);
                 AppUser updateUser = appUserRepository.updateUserByEmail(userReq2);
-                sendEmailVerification("leangsengk90@gmail.com",getCode,code.EncryptPassword(updateUser.getToken()));
+                System.out.println("tokenURL: " + findUserByEmail.getToken());
+                String tokenURL = code.EncryptPassword(findUserByEmail.getToken());
+//                System.out.println("tokenURL: " + tokenURL);
+                sendEmailVerification("leangsengk90@gmail.com",getCode,tokenURL);
 //                System.out.println("updateUser: " + updateUser);
 
 //                AppUser user = appUserRepository.getUserByEmail(email.getEmail());
@@ -97,14 +100,20 @@ public class AppUserServiceImp implements AppUserService {
                 AppUser user = appUserRepository.addNewUser(userReq, uuid);
                 appUserRes = modelMapper.map(user, AppUserRes.class) ;
                 System.out.println("NEW USER: " + appUserRes);
+                //After add new user and apply role as "USER" to them;
+                appUserRepository.addUserInRoleUSER(appUserRes.getId());
+
                 if(appUserRes != null){
-                    sendEmailVerification("leangsengk90@gmail.com",getCode, code.EncryptPassword(appUserRes.getJwtToken()));
+                    System.out.println("tokenURL: " + user.getToken());
+                    String tokenURL = code.EncryptPassword(user.getToken());
+//                    System.out.println("tokenURL: " + tokenURL);
+                    sendEmailVerification("leangsengk90@gmail.com",getCode, tokenURL);
                 }
                 return appUserRes;
             }
         }catch (Exception ex){
             throw new AppExceptionHandler(StatusCodeEnum.BAD_REQUEST.getNum(),
-                    StatusCodeEnum.BAD_REQUEST.getSms(), "/auth/signup");
+                    ex.getMessage(), "/auth/signup");
         }
     }
 

@@ -32,11 +32,11 @@ public class  GenerateCode {
         System.out.println("EncryptPassword: " + myEncryptedPassword );
 
         String correctToken1 = myEncryptedPassword.substring(0, 2);
-//        System.out.println("correctToken1: " + correctToken1 );
+        //System.out.println("correctToken1: " + correctToken1 );
         String correctToken2 = myEncryptedPassword.substring(2);
-//        System.out.println("correctToken2: " + correctToken2 );
+        //System.out.println("correctToken2: " + correctToken2 );
         String finalToken = correctToken1.concat(generateUserId(4)).concat(correctToken2);
-//        System.out.println("finalToken: " + finalToken );
+        //System.out.println("finalToken: " + finalToken );
         return finalToken;
     }
 
