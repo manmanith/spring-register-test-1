@@ -6,6 +6,7 @@ import com.kshrd.registration.model.AppUser;
 import com.kshrd.registration.payload.request.EmailPasswordReq;
 import com.kshrd.registration.payload.request.EmailReq;
 import com.kshrd.registration.payload.request.JwtReq;
+import com.kshrd.registration.payload.request.TokenReq;
 import com.kshrd.registration.payload.response.AppUserRes;
 import com.kshrd.registration.payload.response.JwtRes;
 import com.kshrd.registration.payload.response.ResponseRes;
@@ -70,8 +71,8 @@ public class JwtAuthenticationController {
         return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
     }
 
-    @GetMapping
-    public ResponseEntity<Object> verifyByToken(@RequestParam(value = "token") String token) throws Exception {
+    @PostMapping
+    public ResponseEntity<Object> verifyByToken(@RequestBody TokenReq token) throws Exception {
         AppUserRes appUserRes = userDetailsService.verifyByToken(token);
 
         ResponseRes responseRes = new ResponseRes(

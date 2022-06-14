@@ -5,6 +5,7 @@ import com.kshrd.registration.exception.AppExceptionHandler;
 import com.kshrd.registration.model.AppUser;
 import com.kshrd.registration.payload.request.EmailPasswordReq;
 import com.kshrd.registration.payload.request.EmailReq;
+import com.kshrd.registration.payload.request.TokenReq;
 import com.kshrd.registration.payload.response.AppUserRes;
 import com.kshrd.registration.repository.AppUserRepo;
 import com.kshrd.registration.security.JwtTokenUtil;
@@ -116,13 +117,13 @@ public class AppUserServiceImp implements AppUserService {
     }
 
     @Override
-    public AppUserRes verifyByToken(String token) throws Exception {
-        if (token.isEmpty()) throw new NullPointerException("Token is empty!");
+    public AppUserRes verifyByToken(TokenReq token) throws Exception {
+        if (token.getToken().isEmpty()) throw new NullPointerException("Token is empty!");
         ModelMapper modelMapper = new ModelMapper();
         GenerateCode code = new GenerateCode();
 
         try{
-            String getToken = code.DecryptPassword(token);
+            String getToken = code.DecryptPassword(token.getToken());
             AppUser appUser = appUserRepository.getUserByToken(getToken);
             if(appUser != null){
                 AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
