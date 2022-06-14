@@ -126,7 +126,9 @@ public class AppUserServiceImp implements AppUserService {
             String getToken = code.DecryptPassword(token.getToken());
             AppUser appUser = appUserRepository.getUserByToken(getToken);
             if(appUser != null){
-                AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
+                EmailPasswordReq emailPasswordReq = new EmailPasswordReq(appUser.getEmail(), token.getPassword());
+                AppUserRes appUserRes = addNewUserFromGoogle(emailPasswordReq);
+                appUserRes = modelMapper.map(appUser, AppUserRes.class);
                 final String jwtToken = jwtTokenUtil.generateToken(appUser);
                 appUserRes.setJwtToken(jwtToken);
                 return appUserRes;
