@@ -137,6 +137,65 @@ public class AppUserServiceImp implements AppUserService {
         }
     }
 
+    @Override
+    public AppUserRes addNewUserFromGoogle(EmailPasswordReq emailPasswordReq) throws Exception {
+        //Validate email before sending
+        boolean isEmailValid = emailValidator.test(emailPasswordReq.getEmail());
+        if (!isEmailValid) throw new IllegalStateException("Email is invalid!");
+
+        AppUserRes appUserRes = new AppUserRes();
+
+       // GenerateCode code = new GenerateCode();
+      //  String getCode = code.generateUserId(8);
+//        System.out.println("getCode: " +  getCode);
+        String encode = passwordEncoder.encode(emailPasswordReq.getPassword());
+
+        EmailPasswordReq userReq = new EmailPasswordReq(emailPasswordReq.getEmail(), encode);
+        AppUser findUserByEmail = appUserRepository.getUserByEmail(emailPasswordReq.getEmail());
+        ModelMapper modelMapper = new ModelMapper();
+        System.out.println("findUserByEmail: " + findUserByEmail);
+
+        try{
+            if (findUserByEmail != null){
+                EmailPasswordReq userReq2 = new EmailPasswordReq(emailPasswordReq.getEmail(), encode);
+                AppUser updateUser = appUserRepository.updateUserByEmail(userReq2);
+                appUserRes = modelMapper.map(updateUser, AppUserRes.class);
+                System.out.println("EXISTED USER: " + appUserRes);
+
+                final String jwtToken = jwtTokenUtil.generateToken(updateUser);
+                appUserRes.setJwtToken(jwtToken);
+                return appUserRes;
+            }else {
+                String uuid = UUID.randomUUID().toString();
+                System.out.println("ORIGIN UUID: " + uuid);
+                AppUser user = appUserRepository.addNewUser(userReq, uuid);
+                appUserRes = modelMapper.map(user, AppUserRes.class) ;
+                System.out.println("NEW USER: " + appUserRes);
+                //After add new user and apply role as "USER" to them;
+                appUserRepository.addUserInRoleUSER(appUserRes.getId());
+
+                final String jwtToken = jwtTokenUtil.generateToken(user);
+                appUserRes.setJwtToken(jwtToken);
+                return appUserRes;
+            }
+        }catch (Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    @Override
+    public AppUserRes getUserByEmail(String email) throws Exception {
+        if (email.isEmpty()) throw new UsernameNotFoundException("Email cannot be empty!");
+        try {
+            AppUser appUser = appUserRepository.getUserByEmail(email);
+            ModelMapper modelMapper = new ModelMapper();
+            AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
+            return appUserRes;
+        }catch (Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+    }
+
     @Value("${base.token.url}")
     private String baseToken;
 

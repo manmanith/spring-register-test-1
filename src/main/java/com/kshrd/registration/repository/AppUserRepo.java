@@ -48,7 +48,7 @@ public interface AppUserRepo {
     @ResultMap("userResults")
     AppUser getUserByEmail(String email);
 
-    @Select("SELECT r.id, r.name " +
+    @Select("SELECT r.id, r.name, r.status " +
             "FROM user_role ur " +
             "JOIN role r " +
             "ON ur.role_id = r.id " +
@@ -59,7 +59,7 @@ public interface AppUserRepo {
     @ResultMap("userResults")
     AppUser updateUserByEmail(@Param("user") EmailPasswordReq userReq);
 
-    @Select("SELECT * FROM app_user WHERE token = #{token}")
+    @Select("SELECT *, id as user_id FROM app_user WHERE token = #{token}")
     @ResultMap("userResults")
     AppUser getUserByToken(String token);
 

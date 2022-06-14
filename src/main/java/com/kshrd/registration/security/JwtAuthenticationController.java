@@ -3,6 +3,7 @@ package com.kshrd.registration.security;
 
 import com.kshrd.registration.exception.AppExceptionHandler;
 import com.kshrd.registration.model.AppUser;
+import com.kshrd.registration.payload.request.EmailPasswordReq;
 import com.kshrd.registration.payload.request.EmailReq;
 import com.kshrd.registration.payload.request.JwtReq;
 import com.kshrd.registration.payload.response.AppUserRes;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 
 
 @RestController
-//@CrossOrigin
+@RequestMapping("/auth")
 public class JwtAuthenticationController {
 
     private final AuthenticationManager authenticationManager;
@@ -36,7 +37,7 @@ public class JwtAuthenticationController {
         this.userDetailsService = userDetailsService;
     }
 
-    @RequestMapping(value = "/auth/signin", method = RequestMethod.POST)
+    @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtReq jwtReq) throws Exception {
 
         if(jwtReq.getEmail().isEmpty() || jwtReq.getPassword().isEmpty())
@@ -45,12 +46,10 @@ public class JwtAuthenticationController {
         authenticate(jwtReq.getEmail(), jwtReq.getPassword());
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(jwtReq.getEmail());
-
         System.out.println("userDetails: " + userDetails);
+
         final String token = jwtTokenUtil.generateToken(userDetails);
-        AppUserRes appUserRes = new AppUserRes();
-        ModelMapper mapper = new ModelMapper();
-        appUserRes = mapper.map(userDetails, AppUserRes.class);
+        AppUserRes appUserRes = userDetailsService.getUserByEmail(jwtReq.getEmail());
         appUserRes.setJwtToken(token);
 
         ResponseRes responseRes = new ResponseRes(
@@ -60,10 +59,38 @@ public class JwtAuthenticationController {
         return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
     }
 
-    @PostMapping("/auth/signup")
-    public AppUserRes addNewUser(@RequestBody EmailReq email) throws Exception {
-        AppUserRes appUser = userDetailsService.addNewUser(email);
-        return appUser;
+    @PostMapping("/signup")
+    public ResponseEntity<Object> addNewUser(@RequestBody EmailReq email) throws Exception {
+        AppUserRes appUserRes = userDetailsService.addNewUser(email);
+
+        ResponseRes responseRes = new ResponseRes(
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign up successfully!",
+                "/auth/signup",true, appUserRes,null
+        );
+        return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> verifyByToken(@RequestParam(value = "token") String token) throws Exception {
+        AppUserRes appUserRes = userDetailsService.verifyByToken(token);
+
+        ResponseRes responseRes = new ResponseRes(
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign in with token successfully!",
+                "/auth",true, appUserRes,null
+        );
+        return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
+    }
+
+
+    @PostMapping("signup-with-google")
+    public ResponseEntity<Object> signUpWithGoogle(@RequestBody EmailPasswordReq emailPasswordReq) throws Exception {
+        AppUserRes appUserRes = userDetailsService.addNewUserFromGoogle(emailPasswordReq);
+
+        ResponseRes responseRes = new ResponseRes(
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign un with google successfully!",
+                "/auth/signup-with-google",true, appUserRes,null
+        );
+        return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
     }
 
     private void authenticate(String username, String password) throws Exception {
