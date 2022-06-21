@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserReq {
+    private Integer id;
     private String fullname;
     private String email;
     private String nationalCard;

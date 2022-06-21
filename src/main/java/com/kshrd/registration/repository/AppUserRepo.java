@@ -39,13 +39,13 @@ public interface AppUserRepo {
             @Result(property = "generation", column = "generation_id",
                     one = @One(select = "com.kshrd.registration.repository.GenerationRepo.getGenerationById")),
             @Result(property = "isDonated", column = "is_donated"),
-            @Result(property = "roles", column = "user_id",
+            @Result(property = "roles", column = "id",
                     many = @Many(select = "getAllRoleByUserId")
             )
     })
     AppUser addNewUser(@Param("user") EmailPasswordReq userReq, String token);
 
-    @Select("SELECT *, id as user_id FROM app_user WHERE email = #{email}")
+    @Select("SELECT * FROM app_user WHERE email = #{email}")
     @ResultMap("userResults")
     AppUser getUserByEmail(String email);
 
@@ -69,28 +69,6 @@ public interface AppUserRepo {
     void addUserInRoleUSER(Integer userId);
 
     @Select("UPDATE app_user SET fullname = #{user.fullname}, national_card = #{user.nationalCard}, gender = #{user.gender}, dob = #{user.dob}, pob_id = #{user.pobId}, phone = #{user.phone}, emergency_phone = #{user.emergencyPhone}, relative_id = #{user.relativeId}, address_id = #{user.addressId}, email = #{user.email}, university_id = #{user.universityId}, education_id = #{user.educationId}, photo_url = #{user.photoUrl}, reference_url = #{user.referenceUrl}, status = #{user.status}, generation_id = #{user.generationId}, create_date = #{user.createDate}  WHERE email = #{user.email} RETURNING *")
-    @Results(id = "updateUserResults", value = {
-            @Result(property = "nationalCard", column = "national_card"),
-            @Result(property = "pob", column = "pob_id",
-                    one = @One(select = "com.kshrd.registration.repository.ProvinceRepo.getProvinceById")),
-            @Result(property = "emergencyPhone", column = "emergency_phone"),
-            @Result(property = "education", column = "education_id",
-                    one = @One(select = "com.kshrd.registration.repository.EducationRepo.getEducationById")),
-            @Result(property = "address", column = "address_id",
-                    one = @One(select = "com.kshrd.registration.repository.ProvinceRepo.getProvinceById")),
-            @Result(property = "relative", column = "relative_id",
-                    one = @One(select = "com.kshrd.registration.repository.RelativeRepo.getRelativeById")),
-            @Result(property = "university", column = "university_id",
-                    one = @One(select = "com.kshrd.registration.repository.UniversityRepo.getUniversityById")),
-            @Result(property = "referenceUrl", column = "reference_url"),
-            @Result(property = "createDate", column = "create_date"),
-            @Result(property = "photoUrl", column = "photo_url"),
-            @Result(property = "generation", column = "generation_id",
-                    one = @One(select = "com.kshrd.registration.repository.GenerationRepo.getGenerationById")),
-            @Result(property = "isDonated", column = "is_donated"),
-            @Result(property = "roles", column = "user_id",
-                    many = @Many(select = "getAllRoleByUserId")
-            )
-    })
+    @ResultMap("userResults")
     AppUser updateUserInfoByEmail(@Param("user") UpdateUserReq updateUserReq);
 }
