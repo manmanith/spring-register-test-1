@@ -3,10 +3,7 @@ package com.kshrd.registration.security;
 
 import com.kshrd.registration.exception.AppExceptionHandler;
 import com.kshrd.registration.model.AppUser;
-import com.kshrd.registration.payload.request.EmailPasswordReq;
-import com.kshrd.registration.payload.request.EmailReq;
-import com.kshrd.registration.payload.request.JwtReq;
-import com.kshrd.registration.payload.request.TokenReq;
+import com.kshrd.registration.payload.request.*;
 import com.kshrd.registration.payload.response.AppUserRes;
 import com.kshrd.registration.payload.response.JwtRes;
 import com.kshrd.registration.payload.response.ResponseRes;
@@ -82,13 +79,23 @@ public class JwtAuthenticationController {
         return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
     }
 
+    @PutMapping("/user")
+    public ResponseEntity<Object> updateUserInfoByEmail(@RequestBody UpdateUserReq updateUserReq) throws Exception {
+        AppUserRes appUserRes = userDetailsService.updateUserInfoByEmail(updateUserReq);
+
+        ResponseRes responseRes = new ResponseRes(
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Update user with email successfully!",
+                "/auth",true, appUserRes,null
+        );
+        return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());
+    }
 
     @PostMapping("signup-with-google")
     public ResponseEntity<Object> signUpWithGoogle(@RequestBody EmailPasswordReq emailPasswordReq) throws Exception {
         AppUserRes appUserRes = userDetailsService.addNewUserFromGoogle(emailPasswordReq);
 
         ResponseRes responseRes = new ResponseRes(
-                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign un with google successfully!",
+                HttpStatus.OK.value(), LocalDateTime.now(),HttpStatus.OK,"Sign up with google successfully!",
                 "/auth/signup-with-google",true, appUserRes,null
         );
         return new ResponseEntity<>(responseRes, responseRes.getHttpMessage());

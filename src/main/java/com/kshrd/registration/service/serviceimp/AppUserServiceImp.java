@@ -6,6 +6,7 @@ import com.kshrd.registration.model.AppUser;
 import com.kshrd.registration.payload.request.EmailPasswordReq;
 import com.kshrd.registration.payload.request.EmailReq;
 import com.kshrd.registration.payload.request.TokenReq;
+import com.kshrd.registration.payload.request.UpdateUserReq;
 import com.kshrd.registration.payload.response.AppUserRes;
 import com.kshrd.registration.repository.AppUserRepo;
 import com.kshrd.registration.security.JwtTokenUtil;
@@ -194,6 +195,18 @@ public class AppUserServiceImp implements AppUserService {
             ModelMapper modelMapper = new ModelMapper();
             AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
             return appUserRes;
+        }catch (Exception ex){
+            throw new Exception(ex.getMessage());
+        }
+    }
+
+    @Override
+    public AppUserRes updateUserInfoByEmail(UpdateUserReq updateUserReq) throws Exception {
+        try{
+            AppUser appUser = appUserRepository.updateUserInfoByEmail(updateUserReq);
+            ModelMapper modelMapper = new ModelMapper();
+            AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
+            return  appUserRes;
         }catch (Exception ex){
             throw new Exception(ex.getMessage());
         }
