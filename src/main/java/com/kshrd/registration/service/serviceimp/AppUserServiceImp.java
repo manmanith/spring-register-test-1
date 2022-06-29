@@ -206,6 +206,8 @@ public class AppUserServiceImp implements AppUserService {
             AppUser appUser = appUserRepository.updateUserInfoByEmail(updateUserReq);
             ModelMapper modelMapper = new ModelMapper();
             AppUserRes appUserRes = modelMapper.map(appUser, AppUserRes.class);
+            final String jwtToken = jwtTokenUtil.generateToken(appUser);
+            appUserRes.setJwtToken(jwtToken);
             return  appUserRes;
         }catch (Exception ex){
             throw new Exception(ex.getMessage());
