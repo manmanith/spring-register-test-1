@@ -12,6 +12,7 @@ import com.kshrd.registration.repository.AppUserRepo;
 import com.kshrd.registration.security.JwtTokenUtil;
 import com.kshrd.registration.service.AppUserService;
 import com.kshrd.registration.service.EmailService;
+import com.kshrd.registration.utillity.DecodeCryptoJS;
 import com.kshrd.registration.utillity.GenerateCode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -143,8 +144,11 @@ public class AppUserServiceImp implements AppUserService {
 
     @Override
     public AppUserRes addNewUserFromGoogle(EmailPasswordReq emailPasswordReq) throws Exception {
+
+        String decodeEmail = DecodeCryptoJS.getDecode(emailPasswordReq.getEmail());
+
         //Validate email before sending
-        boolean isEmailValid = emailValidator.test(emailPasswordReq.getEmail());
+        boolean isEmailValid = emailValidator.test(decodeEmail);
         if (!isEmailValid) throw new IllegalStateException("Email is invalid!");
 
         AppUserRes appUserRes = new AppUserRes();
@@ -154,14 +158,14 @@ public class AppUserServiceImp implements AppUserService {
 //        System.out.println("getCode: " +  getCode);
         String encode = passwordEncoder.encode(emailPasswordReq.getPassword());
 
-        EmailPasswordReq userReq = new EmailPasswordReq(emailPasswordReq.getEmail(), encode);
-        AppUser findUserByEmail = appUserRepository.getUserByEmail(emailPasswordReq.getEmail());
+        EmailPasswordReq userReq = new EmailPasswordReq(decodeEmail, encode);
+        AppUser findUserByEmail = appUserRepository.getUserByEmail(decodeEmail);
         ModelMapper modelMapper = new ModelMapper();
         System.out.println("findUserByEmail: " + findUserByEmail);
 
         try{
             if (findUserByEmail != null){
-                EmailPasswordReq userReq2 = new EmailPasswordReq(emailPasswordReq.getEmail(), encode);
+                EmailPasswordReq userReq2 = new EmailPasswordReq(decodeEmail, encode);
                 AppUser updateUser = appUserRepository.updateUserByEmail(userReq2);
                 appUserRes = modelMapper.map(updateUser, AppUserRes.class);
                 System.out.println("EXISTED USER: " + appUserRes);
