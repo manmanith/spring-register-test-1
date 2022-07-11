@@ -22,7 +22,7 @@ public class FileConfig implements WebMvcConfigurer {
 //        WebMvcConfigurer.super.addResourceHandlers(registry);
 
         //change resource path "src/main/resources/images/" to "/images/**";
-        registry.addResourceHandler(client).addResourceLocations("file:" + serverPath);
+        registry.addResourceHandler(client).addResourceLocations("file:" + server);
         //file: (type of path from where?) is root directory from project file: src/main/resources/images/
 
     }
