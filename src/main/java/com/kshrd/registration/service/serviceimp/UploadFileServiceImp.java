@@ -34,29 +34,26 @@ public class UploadFileServiceImp implements UploadFileService {
 //    }
 
     @Override
-    public String saveFile(MultipartFile multipartFile) throws IOException {
-//            System.out.println("filename: " + filename);
-//            String[] fileParts = filename.split("\\.");
-//            String extension = fileParts[fileParts.length - 1];
-//            System.out.println("extension: " + extension);
-//
-//            filename = UUID.randomUUID() + "." +  extension;
-////            Path resolvePath = path.resolve(filename);
-//            Path resolvePath = Paths.get(file + filename);
-//            Files.copy(file.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
-//
-//            return imageUrl + filename;
+    public String saveFile(MultipartFile file) throws IOException {
+        try{
             Path uploadPath = Paths.get(file.toString());
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
-            try (InputStream inputStream = multipartFile.getInputStream()) {
-                String filename = multipartFile.getOriginalFilename();
+            InputStream inputStream = file.getInputStream();
 
-                Path filePath = uploadPath.resolve(filename);
-                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                return filename;
+            String filename = file.getOriginalFilename();
+            System.out.println("filename: " + filename);
+            String[] fileParts = filename.split("\\.");
+            String extension = fileParts[fileParts.length - 1];
+            System.out.println("extension: " + extension);
+
+            filename = UUID.randomUUID() + "." +  extension;
+            Path resolvePath = uploadPath.resolve(filename);
+            Files.copy(inputStream, resolvePath, StandardCopyOption.REPLACE_EXISTING);
+
+            return imageUrl + filename;
         }catch (IOException ex){
             throw new IOException(ex.getMessage());
         }
@@ -98,7 +95,7 @@ public class UploadFileServiceImp implements UploadFileService {
 //                Files.copy(multipartFile.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
 //            }
 //            return urlList;
-            return null;
+            return  null;
         }catch (Exception ex){
             throw new IOException(ex.getMessage());
         }

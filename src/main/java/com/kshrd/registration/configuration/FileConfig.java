@@ -11,7 +11,6 @@ public class FileConfig implements WebMvcConfigurer {
     //Be careful: "src/main/resources/images" error without slash;
     String serverPath = "src/main/resources/images/";
 
-
     @Value("${file.upload.server.path}")
     private String server;
 
