@@ -51,9 +51,10 @@ public class UploadFileServiceImp implements UploadFileService {
 
             filename = UUID.randomUUID() + "." +  extension;
             Path resolvePath = uploadPath.resolve(filename);
+            System.out.printf("resolvePath" + resolvePath);
             Files.copy(inputStream, resolvePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return imageUrl + filename;
+            return filename+", "+resolvePath;
         }catch (IOException ex){
             throw new IOException(ex.getMessage());
         }
