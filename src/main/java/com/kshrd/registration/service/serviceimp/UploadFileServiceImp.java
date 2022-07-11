@@ -20,10 +20,16 @@ public class UploadFileServiceImp implements UploadFileService {
     @Value("${image.url}")
     private String imageUrl;
 
+    @Value("${file.upload.client.path}")
+    private String client;
+
     Path path;
     public UploadFileServiceImp(){
         path = Paths.get("src/main/resources/images");
     }
+//    public UploadFileServiceImp(){
+//        path = Paths.get("src/main/resources/images");
+//    }
 
     @Override
     public String saveFile(MultipartFile file) throws IOException {
