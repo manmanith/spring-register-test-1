@@ -54,7 +54,7 @@ public class UploadFileServiceImp implements UploadFileService {
             System.out.printf("resolvePath" + resolvePath);
             Files.copy(inputStream, resolvePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return filename+", "+resolvePath;
+            return imageUrl + filename;
         }catch (IOException ex){
             throw new IOException(ex.getMessage());
         }
