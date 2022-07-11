@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,28 +25,38 @@ public class UploadFileServiceImp implements UploadFileService {
     @Value("${file.upload.client.path}")
     private String client;
 
-    Path path;
+    File file;
     public UploadFileServiceImp(){
-        path = Paths.get("src/main/resources/images");
+        file = new File("src/main/resources/images");
     }
 //    public UploadFileServiceImp(){
 //        path = Paths.get("src/main/resources/images");
 //    }
 
     @Override
-    public String saveFile(MultipartFile file) throws IOException {
-        try{
-            String filename = file.getOriginalFilename();
-            System.out.println("filename: " + filename);
-            String[] fileParts = filename.split("\\.");
-            String extension = fileParts[fileParts.length - 1];
-            System.out.println("extension: " + extension);
+    public String saveFile(MultipartFile multipartFile) throws IOException {
+//            System.out.println("filename: " + filename);
+//            String[] fileParts = filename.split("\\.");
+//            String extension = fileParts[fileParts.length - 1];
+//            System.out.println("extension: " + extension);
+//
+//            filename = UUID.randomUUID() + "." +  extension;
+////            Path resolvePath = path.resolve(filename);
+//            Path resolvePath = Paths.get(file + filename);
+//            Files.copy(file.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+//
+//            return imageUrl + filename;
+            Path uploadPath = Paths.get(file.toString());
 
-            filename = UUID.randomUUID() + "." +  extension;
-            Path resolvePath = path.resolve(filename);
-            Files.copy(file.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                String filename = multipartFile.getOriginalFilename();
 
-            return imageUrl + filename;
+                Path filePath = uploadPath.resolve(filename);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                return filename;
         }catch (IOException ex){
             throw new IOException(ex.getMessage());
         }
@@ -72,20 +84,21 @@ public class UploadFileServiceImp implements UploadFileService {
     @Override
     public List<String> saveMultiFiles(MultipartFile[] fileList) throws IOException {
         try{
-            List urlList = new ArrayList();
-            for(MultipartFile multipartFile: fileList){
-                String filename = multipartFile.getOriginalFilename();
-                System.out.println("filename: " + filename);
-                String[] fileParts = filename.split("\\.");
-                String extension = fileParts[fileParts.length - 1];
-                System.out.println("extension: " + extension);
-
-                filename = UUID.randomUUID() + "." +  extension;
-                urlList.add(imageUrl + filename);
-                Path resolvePath = path.resolve(filename);
-                Files.copy(multipartFile.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
-            }
-            return urlList;
+//            List urlList = new ArrayList();
+//            for(MultipartFile multipartFile: fileList){
+//                String filename = multipartFile.getOriginalFilename();
+//                System.out.println("filename: " + filename);
+//                String[] fileParts = filename.split("\\.");
+//                String extension = fileParts[fileParts.length - 1];
+//                System.out.println("extension: " + extension);
+//
+//                filename = UUID.randomUUID() + "." +  extension;
+//                urlList.add(imageUrl + filename);
+//                Path resolvePath = path.resolve(filename);
+//                Files.copy(multipartFile.getInputStream(), resolvePath, StandardCopyOption.REPLACE_EXISTING);
+//            }
+//            return urlList;
+            return null;
         }catch (Exception ex){
             throw new IOException(ex.getMessage());
         }
