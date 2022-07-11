@@ -3,6 +3,7 @@ package com.kshrd.registration.service.serviceimp;
 import com.kshrd.registration.service.UploadFileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,28 +34,20 @@ public class UploadFileServiceImp implements UploadFileService {
 //        path = Paths.get("src/main/resources/images");
 //    }
 
+    private final Path root = Paths.get("src/main/resources/images/");
+
     @Override
     public String saveFile(MultipartFile file) throws IOException {
         try{
-            Path uploadPath = Paths.get(file.toString());
-
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+            String filename = System.currentTimeMillis() + "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
+//        String uploadDir  = root.toString();
+//        Path filePath = root.resolve();
+            if (!Files.exists(root)) {
+                Files.createDirectories(root);
             }
-            InputStream inputStream = file.getInputStream();
-
-            String filename = file.getOriginalFilename();
-            System.out.println("filename: " + filename);
-            String[] fileParts = filename.split("\\.");
-            String extension = fileParts[fileParts.length - 1];
-            System.out.println("extension: " + extension);
-
-            filename = UUID.randomUUID() + "." +  extension;
-            Path resolvePath = uploadPath.resolve(filename);
-            System.out.printf("resolvePath" + resolvePath);
-            Files.copy(inputStream, resolvePath, StandardCopyOption.REPLACE_EXISTING);
-
+            Files.copy(file.getInputStream(), this.root.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
             return imageUrl + filename;
+
         }catch (IOException ex){
             throw new IOException(ex.getMessage());
         }
