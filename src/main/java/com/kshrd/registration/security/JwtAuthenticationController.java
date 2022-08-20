@@ -109,7 +109,7 @@ public class JwtAuthenticationController {
         } catch (BadCredentialsException e) {
             throw new Exception("INVALID_CREDENTIALS", e);
         } catch (Exception ex){
-            throw new Exception("EEEEEE");
+            throw new Exception("OTHERS");
         }
     }
 }
