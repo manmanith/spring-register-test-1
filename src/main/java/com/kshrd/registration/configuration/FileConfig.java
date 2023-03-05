@@ -9,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class FileConfig implements WebMvcConfigurer {
 
     //Be careful: "src/main/resources/images" error without slash;
-    String serverPath = "/app/src/main/resources/images/";
+    //String serverPath = "/app/src/main/resources/images/";
+    String serverPath = "/src/main/resources/images/";
 //    String serverPath = "/home/leangsengk90/images/";
 
     @Value("${file.upload.server.path}")
