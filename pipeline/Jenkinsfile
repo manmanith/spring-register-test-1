@@ -1,0 +1,18 @@
+pipeline{
+  agent any
+  tools{
+    maven '3.6.3'
+  }
+  stages{
+    stage("Build Spring Project"){
+      steps{
+        sh "mvn clean package"
+      }
+    }
+    stage("Deploy Service"){
+      steps{
+        sh "docker compose up -d --build"
+      }
+    }
+  }
+}
