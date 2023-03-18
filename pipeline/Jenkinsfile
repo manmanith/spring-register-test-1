@@ -11,7 +11,15 @@ pipeline{
     }
     stage("Deploy Service"){
       steps{
-        sh "docker compose up -d --build"
+        //sh "docker compose up -d --build"
+        script{
+          docker.withRegistry('https://hub.docker.com', 'dockerhub-auth') {
+            def customImage = docker.build("xeng/spring-register:${BUILD_NUMBER}")
+              /* Push the container to the custom Registry */
+              customImage.push()
+          }
+        }
+        sh 'docker logout'
       }
     }
   }
