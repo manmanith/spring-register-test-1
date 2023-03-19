@@ -1,38 +1,41 @@
 #!/bin/bash
 
-cat << EOF > ./reactjs-app.yml
+cat << EOF > /home/dara/kubernetes/register-app.yml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: reactjs-deploy
+  name: register-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: reactjs-app
+      app: register-app
   template:
     metadata:
       labels:
-       app: reactjs-app
+       app: register-app
     spec:
       containers:
-        - name: reactjs-cont
-          image: xeng/kube-reactjs:$1
+        - name: register-cont
+          image: xeng/register-k8s:$1
           ports:
-            - containerPort: 80
+            - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-svc
+  name: register-svc
 spec:
   type: NodePort
   selector:
-    app: reactjs-app
+    app: register-app
   ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 30002
+    - port: 8080
+      targetPort: 8080
+      nodePort: 38080
       
-EOF >>
+EOF
+
+# Deploy with kubernetes
+kubectl apply -f /home/dara/kubernetes/register-app.yml
