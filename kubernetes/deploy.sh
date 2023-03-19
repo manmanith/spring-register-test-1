@@ -16,8 +16,6 @@ spec:
      labels:
        app: register-app
    spec:
-     nodeSelector:
-       group: workers
      containers:
        - name: register-cont
          image: xeng/spring-register:$1
