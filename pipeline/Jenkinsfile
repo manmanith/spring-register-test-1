@@ -31,7 +31,7 @@ pipeline{
                     sh 'scp -o StrictHostKeyChecking=no -r kubernetes dara@10.148.0.12:/home/dara'
                     sh "ssh -o StrictHostKeyChecking=no dara@10.148.0.12 bash /home/dara/kubernetes/deploy.sh ${BUILD_NUMBER}"
                 }
-                //Trigger to build other job
+              //Trigger to build other job => Get value: "${params.BUILD_NUM}"
                 build job: 'reactjs-pipeline', parameters: [
                     string(name: 'BUILD_NUM', value: "${BUILD_NUMBER}"),
                     booleanParam(name: 'isSingle', value: true)
