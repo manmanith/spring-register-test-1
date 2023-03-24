@@ -35,13 +35,30 @@ kind: Service
 metadata:
  name: register-svc
 spec:
- type: NodePort
+ type: ClusterIP
  selector:
    app: register-app
  ports:
    - port: 8080
-     nodePort: 32222
-      
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: register.e-crops.co
+      http:
+        paths:
+          - path: /spring(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: register-svc
+                port:
+                  number: 8080
 EOF
 
 # Deploy with kubernetes
