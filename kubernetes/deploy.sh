@@ -52,7 +52,7 @@ spec:
     - host: register.e-crops.co
       http:
         paths:
-          - path: /spring([^/]+)/(.+)
+          - path: /spring/([^/]+)/(.+)
             pathType: Prefix
             backend:
               service:
