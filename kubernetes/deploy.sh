@@ -46,13 +46,13 @@ kind: Ingress
 metadata:
   name: nginx-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /\$1
+    nginx.ingress.kubernetes.io/rewrite-target: /\$1/\$2
 spec:
   rules:
     - host: register.e-crops.co
       http:
         paths:
-          - path: /spring(/|$)(.*)
+          - path: /spring/(.+)
             pathType: Prefix
             backend:
               service:
