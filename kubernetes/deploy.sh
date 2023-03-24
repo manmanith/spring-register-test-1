@@ -46,7 +46,7 @@ kind: Ingress
 metadata:
   name: nginx-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/rewrite-target: /\$2
 spec:
   rules:
     - host: register.e-crops.co
