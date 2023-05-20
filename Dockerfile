@@ -1,3 +1,3 @@
 FROM openjdk:11
-ADD ./target/*.jar /ROOT.jar
+ADD ./target/registration-1.0.jar /ROOT.jar
 ENTRYPOINT ["java", "-jar", "ROOT.jar"]
