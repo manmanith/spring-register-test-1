@@ -6,20 +6,20 @@ pipeline{
   }
 
   stages{
+    
     stage("Build Spring Project"){
       steps{
         sh "mvn clean package"
       }
     }
-  }
-  
-  stages{
+    
     stage("Deploy Service"){
       steps{
         sh "docker compose up -d --build"
       }
     }
+    
   }
-
+  
   
 }
