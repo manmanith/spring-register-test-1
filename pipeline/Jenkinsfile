@@ -1,19 +1,32 @@
 pipeline{
-  agent { label 'master'}
+  agent none
 
   tools{
     maven '3.6.3'
   }
 
   stages{
-    
     stage("Build Spring Project"){
+      agent { label 'master' } 
       steps{
         sh "mvn clean package"
       }
     }
+
+    stage("Build Docker Image"){
+      agent { label 'master' } 
+      steps{
+        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+            sh "docker build -t xeng/register-g3:1.1 ."
+            sh "docker push xeng/register-g3:1.1" 
+        }
+        sh 'docker logout'
+      }
+    }
     
     stage("Deploy Service"){
+      agent { label 'worker5' } 
       steps{
         sh "docker compose up -d --build"
       }
