@@ -2,10 +2,8 @@ version: "3.8"
 services:
   register-api:
     container_name: "register-ui-cont"
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: xeng/register-g3:1.1
     ports:
       - "8181:8080"
     volumes:
-      - "$HOME/register-images:/src/main/resources/images"
+      - "/home/dara/register-images:/src/main/resources/images"
