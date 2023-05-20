@@ -2,6 +2,10 @@ version: "3.8"
 services:
   register-api:
     container_name: "register-ui-cont"
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8181:8080"
+    volumes:
+      - "$HOME/register-images:/src/main/resources/images"
