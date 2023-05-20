@@ -12,6 +12,14 @@ pipeline{
       }
     }
   }
+  
+  stages{
+    stage("Deploy Service"){
+      steps{
+        sh "docker compose up -d --build"
+      }
+    }
+  }
 
   
 }
