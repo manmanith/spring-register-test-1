@@ -17,9 +17,9 @@ pipeline{
                        sh "mvn clean package"
                }
                     
-               docker.withRegistry('', 'docker-hub'){
+               docker.withRegistry('https://registry.e-crops.co', 'nexus-id'){
                         //docker login -u xeng -p ****
-                        def customImage = docker.build("xeng/register-VV1:1.2.3")
+                        def customImage = docker.build("registry.e-crops.co/register:1.2.3")
                         customImage.push()
              }
           }
