@@ -40,7 +40,7 @@ pipeline{
     */
    
     stage("Deploy Service"){
-      agent { label 'worker5' } 
+      agent { label 'master' } 
       steps{
         sh "docker compose up -d --build"
       }
