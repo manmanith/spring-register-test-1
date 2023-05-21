@@ -1,12 +1,11 @@
 pipeline{
   agent none
   
-  /*
-  tools{
-    maven '3.6.3'
+  parameters{
+    booleanParam(name: "CLEAN_WS" , defaultValue: false , description: "Do you want to clean workspace?" )
+    string(name: "BRANCH", defaultValue: "master")
+    choice(name: "VERSION", choices: ["8", "11", "17"])
   }
-  */
-
   stages{
     stage("Build Spring Project"){
       agent { label 'master' } 
