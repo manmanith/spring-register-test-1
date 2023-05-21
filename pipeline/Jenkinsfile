@@ -1,18 +1,31 @@
 pipeline{
   agent none
-
+  
+  /*
   tools{
     maven '3.6.3'
   }
+  */
 
   stages{
     stage("Build Spring Project"){
       agent { label 'master' } 
       steps{
-        sh "mvn clean package"
+        //sh "mvn clean package"
+          script{
+               docker.image('node:latest').inside{
+                       sh "mvn clean package"
+               }
+                    
+               docker.withRegistry('', 'docker-hub'){
+                        //docker login -u xeng -p ****
+                        def customImage = docker.build("xeng/register-VV1:1.2.3")
+                        customImage.push()
+             }
+          }
       }
     }
-
+    /*
     stage("Build Docker Image"){
       agent { label 'master' } 
       steps{
@@ -24,14 +37,15 @@ pipeline{
         sh 'docker logout'
       }
     }
-    
+    */
+    /*
     stage("Deploy Service"){
       agent { label 'worker5' } 
       steps{
         sh "docker compose up -d --build"
       }
     }
-    
+    */
   }
   
   
