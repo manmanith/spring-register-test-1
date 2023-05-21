@@ -1,5 +1,5 @@
 pipeline{
-  agent none
+  agent { label 'master' } 
   
   parameters{
     booleanParam(name: "CLEAN_WS" , defaultValue: false , description: "Do you want to clean workspace?" )
@@ -7,6 +7,15 @@ pipeline{
     choice(name: "VERSION", choices: ["8", "11", "17"])
   }
   stages{
+    
+    stage("Build Spring Project"){
+      steps{
+        echo "Clean ws: ${CLEAN_WS}"
+        echo "Git Branch: ${BRANCH}"
+        echo "Version: ${VERSION}"
+      }
+    }
+    /*
     stage("Build Spring Project"){
       agent { label 'master' } 
       steps{
@@ -24,6 +33,7 @@ pipeline{
           }
       }
     }
+    */
     /*
     stage("Build Docker Image"){
       agent { label 'master' } 
@@ -38,13 +48,14 @@ pipeline{
     }
     */
    
+    /*
     stage("Deploy Service"){
       agent { label 'master' } 
       steps{
         sh "docker compose up -d --build"
       }
     }
-   
+   */
   }
   
   
