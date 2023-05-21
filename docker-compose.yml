@@ -2,7 +2,7 @@ version: "3.8"
 services:
   register-api:
     container_name: "register-ui-cont"
-    image: xeng/register-g3:1.1
+    image: registry.e-crops.co/register:1.2.3
     ports:
       - "8181:8080"
     volumes:
