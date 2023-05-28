@@ -6,4 +6,4 @@ services:
     ports:
       - "8181:8080"
     volumes:
-      - "/home/dara/register-images:/src/main/resources/images"
+      - "/home/$USER/register-images:/src/main/resources/images"
