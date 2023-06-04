@@ -6,7 +6,7 @@
   tasks:
     - name: Copy file
       copy:
-        src: kubernetes/deploy.sh
+        src: "{{ workspace }}/kubernetes/deploy.sh"
         dest: /opt/deploy.sh
         
     - name: Run Shell Script
