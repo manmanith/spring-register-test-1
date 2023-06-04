@@ -4,11 +4,26 @@ pipeline{
     maven "3.6.3"
   }
   stages{
-    stage("Build Image"){
+    stage("Build"){
       stages{
-        stage("A"){
+        stage("Package Project"){
           steps{
             sh "mvn clean package"
+          }
+        }
+        
+        stage("Buid and Tag Image"){
+          steps{
+            sh "docker build -t xeng/kube-register:1.1.1 ."
+          }
+        }
+        
+        stage("Push Image"){
+          steps{
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+              sh "docker login -u $USERNAME -p $PASSWORD"
+              sh "docker push xeng/kube-register:1.1.1"
+            }
           }
         }
         
