@@ -5,7 +5,14 @@ pipeline{
   }
   stages{
     stage("Build Image"){
-       sh "mvn clean package"
+      stages{
+        stage("A"){
+          steps{
+            sh "mvn clean package"
+          }
+        }
+        
+      }
     }
   }
 }
