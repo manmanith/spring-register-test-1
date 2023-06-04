@@ -14,7 +14,7 @@ pipeline{
         
         stage("Buid and Tag Image"){
           steps{
-            sh "docker build -t xeng/kube-register:1.1.1 ."
+            sh "docker build -t manithman/kube-register:1.1.1 ."
           }
         }
         
