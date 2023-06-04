@@ -1,0 +1,11 @@
+- name: Deploy Playbook
+  hosts: node1
+  become: true
+  tasks:
+    - name: Copy file
+      copy:
+        src: kubernetes/deploy.sh
+        dest: /opt/deploy.sh
+        
+    - name: Run Shell Script
+      command: bash /opt/deploy.sh
