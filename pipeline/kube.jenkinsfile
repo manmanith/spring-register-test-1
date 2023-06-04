@@ -30,7 +30,8 @@ pipeline{
         stage("Deploy Service"){
           steps{
               sh """
-                ansible-playbook -i ansible/inventory node1 ansible/deploy.yml
+                ansible-playbook ansible/deploy.yml \
+                -i ansible/inventory
               """
           }
         }
