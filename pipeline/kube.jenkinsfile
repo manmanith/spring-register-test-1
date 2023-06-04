@@ -1,1 +1,11 @@
-  asdfsadf
+pipeline{
+  agent { label 'master'}
+  tools {
+    maven "3.6.3"
+  }
+  stages{
+    stage("Build Image"){
+       sh "mvn clean package"
+    }
+  }
+}
