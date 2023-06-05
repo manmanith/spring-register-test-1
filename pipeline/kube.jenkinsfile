@@ -20,7 +20,7 @@ pipeline{
         
         stage("Push Image"){
           steps{
-            withCredentials([usernamePassword(credentialsId: 'Docker-Credential-ManithMan' , passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            withCredentials([usernamePassword(credentialsId: 'Docker-Credential-ManithMan', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
               sh "docker login -u $USERNAME -p $PASSWORD"
               sh "docker push manithman/kube-register:1.1.1"
             }
