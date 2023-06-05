@@ -31,7 +31,7 @@ pipeline{
           steps{
               sh """
                 ansible-playbook ansible/deploy.yml \
-                -i $WORKSPACE/ansible/inventory \
+                -i ansible/inventory \
                 -e workspace=$WORKSPACE
               """
           }
